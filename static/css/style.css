@@ -1,0 +1,46 @@
+
+body {
+
+}
+
+.contentData {
+    width:calc(70% - 20px);
+    margin-left:12.5%;
+    padding:10px;
+    background-color: white;
+}
+.wid10 {
+    width:10%;
+}
+.wid20 {
+    width:20%;
+}
+.wid30 {
+    width:30%;
+}
+.wid40 {
+    width:40%;
+}
+
+.tbData {
+    width:100%;
+}
+
+.tbData thead th {
+    border:1px solid orange;
+}
+
+.tbData tbody tr:nth-child(even) {background: #CCC}
+.tbData tbody tr:nth-child(odd) {background: #FFF}
+
+.tbData tbody tr:hover {
+    background-color:orange;
+    cursor: pointer;
+}
+
+.textCentered {
+    width:100%;
+    text-align: center;
+    font-weight: bold;
+}
+

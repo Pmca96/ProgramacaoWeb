@@ -1,0 +1,139 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+	    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></link>
+	</head>
+	<body>
+
+
+	<!-- HTML Form (wrapped in an isolated Bootstrap 3 div) -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6">
+					<form id="live_form">
+					 <div class="form-group">
+					  <label class="control-label ">
+					   How would you rate your experience with us?
+					  </label>
+					  <div class="">
+					   <div class="radio">
+						<label class="radio">
+						 <input name="rating" type="radio" value="Bad"/>
+						 Bad
+						</label>
+					   </div>
+					   <div class="radio">
+						<label class="radio">
+						 <input name="rating" type="radio" value="Fair"/>
+						 Fair
+						</label>
+					   </div>
+					   <div class="radio">
+						<label class="radio">
+						 <input name="rating" type="radio" value="Good"/>
+						 Good
+						</label>
+					   </div>
+					   <div class="radio">
+						<label class="radio">
+						 <input name="rating" type="radio" value="Very Good"/>
+						 Very Good
+						</label>
+					   </div>
+					   <div class="radio">
+						<label class="radio">
+						 <input name="rating" type="radio" value="Excellent"/>
+						 Excellent
+						</label>
+					   </div>
+					  </div>
+					 </div>
+					 <div class="form-group hidden" >
+					  <label class="control-label" for="feedback_bad">
+					   We're sorry to hear you had a bad experience.  What went wrong?
+					  </label>
+					  <textarea class="form-control" cols="40" id="feedback_bad" name="feedback_bad" rows="10"></textarea>
+					 </div>
+					 <div class="form-group hidden">
+					  <label class="control-label" for="feedback_ok">
+					   Please tell us what you liked and how we can improve:
+					  </label>
+					  <textarea class="form-control form-control" cols="40" id="feedback_ok" name="feedback_ok" rows="10"></textarea>
+					 </div>
+					 <div class="form-group hidden" id="div_testimonial">
+					   <div>
+						   <label class="control-label " for="testimonial">
+						   Wonderful!  We're so glad to hear that.  Would you be willing to write a customer comment for our website?
+						   </label>
+						   <div>
+						   <label class="radio-inline">
+							<input name="testimonial" type="radio" value="yes"/>
+							Sure!
+						   </label>
+						   <label class="radio-inline">
+							<input name="testimonial" type="radio" value="no"/>
+							I'd rather not.
+						   </label>
+						   </div>
+					   </div>
+					 </div>
+					 <div class="form-group hidden">
+					  <label class="control-label " for="feedback_great">
+					   Thank you so much!  Please leave your testimonial here:
+					  </label>
+					  <textarea class="form-control" cols="40" id="feedback_great" name="feedback_great" rows="10"></textarea>
+					 </div>
+					 <div class="form-group hidden" id="thanks_anyway">
+					  <label class="control-label">
+					   No problem, thanks for being a customer!
+					  </label>
+					 </div>
+					 <div class="form-group">
+					   <button class="btn btn-primary " name="submit" type="submit">
+						Submit
+					   </button>
+					 </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+        var json = {
+            "Bad":[document.getElementById("feedback_bad").parentElement],
+            "Fair":[document.getElementById("feedback_bad").parentElement],
+            "Good":[document.getElementById("feedback_ok").parentElement],
+            "Very Good":[document.getElementById("feedback_ok").parentElement],
+            "Excellent":[document.getElementById("div_testimonial"),document.getElementById("feedback_great").parentElement ],
+            }
+
+        let data = Array.from(document.getElementsByClassName("hidden"));
+		window.onload = () => {
+
+
+            Array.from(document.getElementsByName("rating")).map((i) => {
+               i.addEventListener("change",changedRadio);
+            });
+
+
+            data.map((i) => {
+                if ( i.id !== "tanks_anyway")
+                    i.style.display ="none";
+            });
+		}
+
+        function changedRadio() {
+            data.map((i) => {
+                if ( i.id !== "tanks_anyway")
+                    i.style.display ="none";
+            });
+            json[this.value].map((i) => {
+                i.style.display="block";
+            });
+            console.log(json[this.value]);
+
+        }
+		</script>
+</html>
