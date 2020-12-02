@@ -1,0 +1,155 @@
+{% extends 'template.html' %}
+
+
+{% block title %}
+Agenda
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/agenda.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/selectPure.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/css/font-awesome.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tail.datetime.css') }}"></link>
+
+<script src="{{ url_for('static', filename='javascript/fullcalendar@5.4.0.main.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/selectPure.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/tail.datetime.js') }}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+<div id='calendar'></div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".agendamento"
+        style="float:right; margin:10px;">Agendar
+</button>
+
+<div class="modal fade agendamento" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-deepBlue text-white">
+                <h5 class="modal-title">Novo agendamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="agendamentoClose">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3" name="adicionarAgendaForm" id="adicionarAgendaForm">
+                    <div class="col-md-12">
+                        <label for="titulonew" class="col-form-label">Titulo <sup>*</sup></label>
+                        <input type="text" class="form-control" id="titulonew" name="titulonew">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="datainicionew">Data início <sup>*</sup></label>
+                        <input type="text" class="form-control" id="datainicionew" name="datainicionew">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="datafimnew">Data fim <sup>*</sup></label>
+                        <input type="text" class="form-control" id="datafimnew" name="datafimnew">
+
+                    </div>
+                    <div class="col-md-12">
+                        <label for="descricaonew" class="col-form-label">Descrição <sup>*</sup></label>
+                        <textarea class="form-control" id="descricaonew" name="descricaonew"
+                                  style="resize: none"></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="localizacaonew" class="col-form-label">Localização GPS</label>
+                        <input type="text" class="form-control" name="localizacaonew" id="localizacaonew">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="contactosnew">Contactos</label>
+                        <span id="contactosnew"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tarefasnew">Tarefas</label>
+                        <span id="tarefasnew"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" id="adicionarAgenda">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;Criar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".viewAgendamento"
+        style="float:right; margin:10px; display:none" id="viewAgendamento">
+</button>
+
+<div class="modal fade viewAgendamento" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-deepBlue text-white">
+                <h5 class="modal-title">Agendamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="viewAgendamentoClose">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3"  name="detailsAgendaForm" id="detailsAgendaForm">
+                    <input type="hidden" class="form-control" id="id" name="id" disabled>
+                    <div class="col-md-12">
+                        <label for="title" class="col-form-label">Titulo <sup>*</sup></label>
+                        <input type="text" class="form-control" id="title" name="titulo" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="datainicio">Data início <sup>*</sup></label>
+                        <input type="text" class="form-control" id="datainicio" name="datainicio" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="datafim">Data fim <sup>*</sup></label>
+                        <input type="text" class="form-control" id="datafim" name="datafim" disabled>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label for="descricao" class="col-form-label">Descrição <sup>*</sup></label>
+                        <textarea class="form-control" name="descricao" id="descricao" style="resize: none"
+                                  disabled></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="localizacao" class="col-form-label">Localização GPS</label>
+                        <input type="text" class="form-control" id="localizacao" name="localizacao" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="contactos">Contactos</label>
+                        <span id="contactos"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tarefas">Tarefas</label>
+                        <span id="tarefas"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="col-form-label">Documentos</label>
+                        <div id="viewDocumentos"  class="form-control"  style="background-color:#e9ecef; height:80px; overflow-y: auto"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-danger" id="remover" onclick="removerAgendamento()">
+                    <i class="fa fa-trash" aria-hidden="true"></i> &nbsp;Remover
+                </button>
+                <button type="button" class="btn btn-primary" id="editar" onclick="editDetails()">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;Edtiar
+                </button>
+                <button type="button" class="btn btn-primary" id="gravar" onclick="saveDetails()" style="display:none;">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i> &nbsp;Gravar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='javascript/agenda.js') }}"></script>
+{% endblock %}

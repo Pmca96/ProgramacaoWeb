@@ -6,6 +6,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html',  page='index')
 
-@app.route('/1')
+@app.route('/agenda')
 def index1():
-    return render_template('index1.html',  page='index1' )
+    return render_template('agenda.html',  page='index' )

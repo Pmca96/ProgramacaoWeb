@@ -1,0 +1,70 @@
+.fc .fc-col-header-cell-cushion { /* needs to be same precedence */
+  padding-top: 5px; /* an override! */
+  padding-bottom: 5px; /* an override! */
+}
+
+.fc-scrollgrid-sync-table, .fc-daygrid-body .fc-daygrid-body-unbalanced{
+    height: 100%;
+}
+.fc-view-harness fc-view-harness-active {
+    height:50% !important;
+}
+
+.fc-col-header-cell-cushion {
+    color:white;
+    text-decoration: unset;
+}
+
+
+.fc-col-header-cell-cushion:hover {
+    color:white;
+}
+
+.fc-col-header-cell {
+    background-color: #3b679d;
+}
+
+.fc-daygrid-day-number{
+    color:black;
+    text-decoration: unset;
+}
+
+.fc-daygrid-day-number:hover {
+    color:black;
+}
+
+.fc-col-header-cell-cushion::first-letter, .fc-toolbar-title::first-letter {
+  text-transform: uppercase;
+}
+
+.fc .fc-button-primary{
+    background-color: #3b679d;
+    border-color: #3b679d;
+}
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:hover{
+    background-color:#35547b;
+    border-color: #35547b;
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: #3270bd;
+    border-color: #3270bd;
+}
+.fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+    box-shadow: unset
+}
+
+.fc .fc-daygrid-day.fc-day-today{
+    background-color: rgba(0, 123, 255, 0.06);
+}
+
+.fc-scrollgrid-sync-table > tbody > tr > .fc-day:hover{
+    background-color: #f0f7ff;
+}
+.fc-event-title-container:hover ~ body {
+
+    background-color: red !important;
+}
