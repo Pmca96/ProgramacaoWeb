@@ -1,0 +1,60 @@
+{% extends 'template.html' %}
+
+
+{% block title %}
+Agenda
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+
+<h3>Contactos</h3>
+<div class="row" >
+    <div class="col-md-3  offset-md-9">
+        <input class="form-control" type="text" placeholder="Pesquisar" name="pesquisar" id="pesquisar"
+               onkeyup="search()"></div>
+</div>
+
+<div class="row" id="contactsContent">
+
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".contactosSearch"
+        style="float:right; margin:10px;">Adicionar contactos
+</button>
+
+<div class="modal fade contactosSearch" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-deepBlue text-white">
+                <h5 class="modal-title">Procurar contactos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="contactosClose">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" onkeyup="searchContactos" id="searchContactos" placeholder="Procure por email">
+                </div>
+                <hr>
+                <div id="pesquisaDeContactos">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='javascript/contactos.js') }}"></script>
+{% endblock %}
