@@ -1,7 +1,3 @@
-body {
-  font-family: Georgia, serif;
-}
-
 a, a:hover {
     color: black;
 }
@@ -64,40 +60,71 @@ a, a:hover {
     min-height: 500px;
     max-height: 750px;
     margin-top: 10px;
-    overflow-y:auto
+    overflow-y: auto
 }
 
-.contactoShow{
-    padding:10px;
+.contactoShow {
+    padding: 10px;
 }
-.contactoShow:hover{
+
+.contactoShow:hover {
     background-color: #d9eaff;
 }
 
-#pesquisaDeContactos{
+#pesquisaDeContactos {
     max-height: 400px;
 }
+
 [id^=adicionarContacto] {
-    float:right;
+    float: right;
     font-size: 30px;
     margin-top: -17px;
-    color:green !important;
+    color: green !important;
     cursor: pointer;
 }
 
-.tarefaContent{
+.tarefaContent {
     min-height: 500px;
     max-height: 750px;
-    margin:10px;
+    margin: 10px;
     background-color: #80808014;
     border: 1px solid #f8f9fa;
     border-radius: 10px;
-    display:block
+    display: block
 }
 
 .tarefaContentHeader {
     text-align: center;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    font-size:17px;
+    font-size: 17px;
+}
+
+.tarefaLine {
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+.tarefaLine:hover {
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #dce7f4;
+    border: 1px solid #3b679d;
+}
+
+#completed, #ongoing, #waiting {
+    overflow-y: auto;
+}
+
+#uploader, #uploader1 {
+    border-radius: 20px ;
+    border:2px dotted #3b679d;
+    background-color: #dce7f4;
+    margin-top:20px;
+    width: 100%;
+    min-height: 150px;
+
 }

@@ -125,7 +125,6 @@ function adicionarContacto(data) {
     contactos1.map((i, k) => {
         if (i.id == id) {
             delete contactos1[k];
-            contactos.push(i);
             let data = "<div class='contacto'><div class='contactoHeader'>" + i.nome + "</div>" +
                 "<div class='contactoBody'>Email: " + i.email + "<br>Telemovel:" + i.telemovel + "</div>" +
                 "<div class='contactoDelete'>" +

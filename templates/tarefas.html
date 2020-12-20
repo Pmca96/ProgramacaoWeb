@@ -12,27 +12,27 @@ Agenda
 {% block content %}
 
 <h3>Tarefas</h3>
-<div class="row" >
+<div class="row"  ondrop="drop0(event)" >
     <div class="col-md-3  offset-md-9">
         <input class="form-control" type="text" placeholder="Pesquisar" name="pesquisar" id="pesquisar"
                onkeyup="search()"></div>
 </div>
 
-<div class="row">
+<div class="row"  >
     <div class="col-md-4 ">
-        <div class="row tarefaContent">
+        <div class="row tarefaContent"  ondrop="drop2(event)" ondragover="allowDrop2(event)" ondragleave="leave2(event)">
             <div class="tarefaContentHeader  bg-success text-white">Completos</div>
             <div id="completed"></div>
         </div>
     </div>
     <div class="col-md-4 ">
-        <div class="row tarefaContent">
+        <div class="row tarefaContent"  ondrop="drop1(event)" ondragover="allowDrop1(event)" ondragleave="leave1(event)">
             <div class="tarefaContentHeader  bg-info text-white">Em progresso</div>
             <div id="ongoing"></div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="row  tarefaContent">
+        <div class="row tarefaContent"  ondrop="drop0(event)"  ondragover="allowDrop0(event)"  ondragleave="leave0(event)">
             <div class="tarefaContentHeader bg-warning text-white">Em espera</div>
             <div id="waiting"></div>
         </div>
@@ -40,37 +40,8 @@ Agenda
 </div>
 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".contactosSearch"
-        style="float:right; margin:10px;">Adicionar tarefa
-</button>
-
-<div class="modal fade contactosSearch" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-deepBlue text-white">
-                <h5 class="modal-title">Procurar contactos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="contactosClose">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-12">
-                    <input type="text" class="form-control" onkeyup="searchContactos" id="searchContactos"
-                           placeholder="Procure por email">
-                </div>
-                <hr>
-                <div id="pesquisaDeContactos">
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<a  class="btn btn-primary" style="float:right; margin:10px;" href="tarefas/criar">Adicionar tarefas
+</a>
 
 {% endblock %}
 

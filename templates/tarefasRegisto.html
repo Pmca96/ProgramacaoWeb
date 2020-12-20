@@ -1,0 +1,73 @@
+{% extends 'template.html' %}
+
+
+{% block title %}
+Agenda
+{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/selectPure.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/css/font-awesome.min.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<h3>Criar Tarefa</h3>
+
+
+<div class="row">
+
+</div>
+
+<form action="/file-upload" class="row g-3">
+
+    <div class="col-md-6">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" class="form-control" name="nome" id="nome">
+    </div>
+    <div class="col-6">
+        <label for="contactos" class="form-label">Contactos</label>
+        <span id="contactos"></span>
+        <!--        <input type="text" class="form-control" id="contactos" name="contactos" placeholder="1234 Main St">-->
+    </div>
+    <div class="col-md-12">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descricao" name="descricao" style="height: 100px"></textarea>
+    </div>
+
+    <div class="col-md-4">
+        <label for="estado" class="form-label">Estado</label>
+        <select id="estado" class="form-select" name="estado">
+            <option value="0" selected>Em espera</option>
+            <option value="1">Em progresso</option>
+            <option value="2">Completo</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-3 control-label">
+            Ficheiros
+        </label>
+        <div class="col-md-12">
+            <div class="fallback dropzone" id="uploader">
+                <input name="file" type="file" multiple id="file" style="display:none;"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary" style="float:right; margin:10px;">Gravar tarefa</button>
+        <a class="btn btn-secondary" style="float:right; margin:10px;" href="/tarefas">Voltar</a>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='javascript/dropzone.min.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/selectPure.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/tarefasRegisto.js') }}"></script>
+{% endblock %}
