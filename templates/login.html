@@ -106,7 +106,7 @@
 <div class="main">
     <div class="col-md-6 col-sm-12">
         <div class="login-form">
-            <form action="/agenda" method="get">
+            <form action="/" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" name="email" id="email" required
@@ -118,10 +118,17 @@
                            placeholder="***********">
                 </div>
 
-
                 <button type="submit" class="btn bg-whiteblue text-white ">Login</button>
                 <a href="/registar" class="btn bg-whiteblue text-white ">Registar</a>
                 <a href="/recuperar" style="margin-left: 20px">Esqueci-me da palavra-chave</a>
+
+                {% if data['erro'] %}
+                    <p class="text-danger"> {{ data['erro']}}</p>
+                {% endif %}
+
+                {% if data['success'] %}
+                    <p class="text-success"> {{ data['success']}}</p>
+                {% endif %}
             </form>
 
         </div>

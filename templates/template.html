@@ -39,7 +39,7 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a {% if data.page=="agenda" %} class="nav-link active"
-                        {% else %} class="nav-link" {% endif %} aria-current="data.page" href="{{ url_for('agenda') }}">
+                        {% else %} class="nav-link" {% endif %} aria-current="data.page" href="/agenda">
                         <span data-feather="home"></span>
                         Agenda
                         </a>
@@ -47,7 +47,7 @@
                     <li class="nav-item">
                         <a {% if data.page=="tarefas" %} class="nav-link active"
                         {% else %} class="nav-link" {% endif %}
-                        href="{{ url_for('tarefas') }}">
+                        href="/tarefas">
                         <span data-feather="file"></span>
                         Tarefas
                         </a>
@@ -55,7 +55,7 @@
                     <li class="nav-item">
                         <a {% if data.page=="contactos" %} class="nav-link active"
                         {% else %} class="nav-link" {% endif %}
-                        href="{{ url_for('contactos') }}">
+                        href="/contactos">
                         <span data-feather="file"></span>
                         Contactos
                         </a>
@@ -64,7 +64,7 @@
                     <li class="nav-item">
                         <a {% if data.page=="logout" %} class="nav-link active"
                         {% else %} class="nav-link" {% endif %}
-                        href="{{ url_for('logout') }}">
+                        href="/logout">
                         <span data-feather="file"></span>
                         Terminar sessão
                         </a>

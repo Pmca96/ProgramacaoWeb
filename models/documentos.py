@@ -8,9 +8,20 @@ class Documento(db.Model):
     localizacao = db.Column(db.String(255), nullable=False)
 
     def __init__(self):
-        self.idDocumento = ""
         self.idTarefa = ""
         self.localizacao = ""
+
+    @classmethod
+    def find_by_id(self, idDocumento):
+        return self.query.filter_by(idDocumento=idDocumento).first()
+
+    def save_to_db(self) -> None:
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self) -> None:
+        db.session.delete(self)
+        db.session.commit()
 
     def __repr__(self):
         return {'idDocumento': self.idDocumento,
