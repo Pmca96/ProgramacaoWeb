@@ -28,10 +28,16 @@ class CalendarioId(Resource):
         if not calendario:
             return {'msg': 'Não foi encontrado o agendamento'}, 401
         else:
-            calendario.start = request.get_json()['start']
-            calendario.end = request.get_json()['end']
-            calendario.gps = request.get_json()['gps']
-            calendario.descricao = request.get_json()['descricao']
+            if 'title' in request.get_json():
+                calendario.title = request.get_json()['title']
+            if 'start' in request.get_json():
+                calendario.start = request.get_json()['start']
+            if 'end' in request.get_json():
+                calendario.end = request.get_json()['end']
+            if 'gps' in request.get_json():
+                calendario.gps = request.get_json()['gps']
+            if 'descricao' in request.get_json():
+                calendario.descricao = request.get_json()['descricao']
             if 'users' in request.get_json():
                 calendario.users.clear()
                 for user in request.get_json()['users']:
@@ -45,7 +51,14 @@ class CalendarioId(Resource):
                     calendario.tarefas.append(Tarefa.find_by_id(tarefa))
             calendario.save_to_db()
             return Calendario_schema.dump(calendario), 200
+    @jwt_required
+    def delete(cls, id: int):
+        calendario = Calendario.find_by_id(id)
+        if calendario:
+            calendario.delete_from_db()
+            return {"msg":"Eliminado"}, 200
 
+        return {"msg": "Nao foi encontrado o registo"}, 401
 
 class CalendarioGeral(Resource):
     @jwt_required
@@ -53,6 +66,7 @@ class CalendarioGeral(Resource):
         claims = get_jwt_claims()
 
         calendario = Calendario()
+        calendario.title = request.get_json()['title']
         calendario.start = request.get_json()['start']
         calendario.end = request.get_json()['end']
         calendario.gps = request.get_json()['gps']

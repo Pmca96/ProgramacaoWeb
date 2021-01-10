@@ -6,7 +6,6 @@ main = Blueprint('main', __name__, template_folder='templates')
 
 @main.route('/')
 def index():
-    print("on index")
     returnRedirect = confirmCredentials(0)
     if returnRedirect != "":
         return redirect(returnRedirect)
@@ -49,8 +48,6 @@ def logout():
     }
 
     response = requests.request("DELETE", url, headers=headers, data={})
-    print(response.status_code)
-    print(response.text)
 
     data = {"page": "login"}
     resp = make_response(redirect('/'))
@@ -80,7 +77,8 @@ def registar():
     data = {"page": "registar"}
     return render_template('registar.html', data=data)
 
-@main.route('/registar', methods = ['POST'])
+
+@main.route('/registar', methods=['POST'])
 def registarSend():
     returnRedirect = confirmCredentials(0)
     if returnRedirect != "":
@@ -99,6 +97,7 @@ def registarSend():
         data = {"page": "registar", "erro": response.json()['msg']}
         return render_template('registar.html', data=data)
 
+
 @main.route('/agenda')
 def agenda():
     returnRedirect = confirmCredentials(1)
@@ -111,45 +110,76 @@ def agenda():
 
 @main.route('/contactos')
 def contactos():
+    returnRedirect = confirmCredentials(1)
+    if returnRedirect != "":
+        return redirect(returnRedirect)
+
     data = {"page": "contactos"}
     return render_template('contactos.html', data=data)
 
 
 @main.route('/tarefas')
 def tarefas():
+    returnRedirect = confirmCredentials(1)
+    if returnRedirect != "":
+        return redirect(returnRedirect)
+
     data = {"page": "tarefas"}
     return render_template('tarefas.html', data=data)
 
 
 @main.route('/tarefas/criar')
 def tarefasCriar():
-    data = {"page": "tarefas", "typer": 0}
+    returnRedirect = confirmCredentials(1)
+    if returnRedirect != "":
+        return redirect(returnRedirect)
+
+    data = {"page": "tarefas"}
+    payload = {}
+    headers = {
+        'Authorization': request.cookies.get('access_token')
+    }
+    url = "http://localhost:5000//api/user?search="
+    r = requests.request("GET", url, headers=headers, data=payload)
+    data['contactos'] = r.json()
     return render_template('tarefasRegisto.html', data=data)
 
 
 @main.route('/tarefas/<int:tarefa>')
 def tarefasEdit(tarefa):
-    data = {"page": "tarefas", "typer": 0}
-    return render_template('tarefasViewEdit.html', data=data)
+    returnRedirect = confirmCredentials(1)
+    if returnRedirect != "":
+        return redirect(returnRedirect)
 
+    data = {"page": "tarefas"}
 
-@main.route('/upload', methods=['POST'])
-def upload():
-    print(request.files)
-    return "aa"
+    url = "http://localhost:5000//api/tarefa/" + str(tarefa)
+    payload = {}
+
+    headers = {
+        'Authorization': request.cookies.get('access_token')
+    }
+    r = requests.request("GET", url, headers=headers, data=payload)
+
+    if r.status_code == 200:
+        data['tarefa'] = r.json()
+        url = "http://localhost:5000//api/user?search="
+        r1 = requests.request("GET", url, headers=headers, data=payload)
+        data['contactos'] = r1.json()
+
+        url = "http://localhost:5000//api/documento/" + str(tarefa)
+        r2 = requests.request("GET", url, headers=headers, data=payload)
+        data['documentos'] = r2.json()
+        return render_template('tarefasViewEdit.html', data=data)
+    else:
+        return redirect('/tarefas', )
 
 
 def confirmCredentials(autenticated=0):
-    print(autenticated)
-    print(request.cookies.get('access_token'))
-
     # Encontra-se autenticado, validar se tem token associados para a pagina
     if autenticated == 1 and request.cookies.get('access_token') == None:
-        print("/")
         return "/"
     elif autenticated == 0 and request.cookies.get('access_token') is not None:
-        print("/agenda")
         return "/agenda"
 
-    print("Empty")
     return ""

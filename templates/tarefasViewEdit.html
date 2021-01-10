@@ -10,6 +10,7 @@ Agenda
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selectPure.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/css/font-awesome.min.css') }}">
+
 {% endblock %}
 
 
@@ -22,28 +23,30 @@ Agenda
 
 </div>
 
-<form action="/file-upload" class="row g-3">
-
+<form action="/file-upload" class="row g-3" name="registo">
+    <input type="hidden" name="idTarefa" value="{{data["tarefa"]["idTarefa"]}}">
     <div class="col-md-6">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" name="nome" id="nome" disabled>
+        <label for="name" class="form-label">Nome</label>
+        <input type="text" class="form-control" name="name" id="name" disabled value="{{data["tarefa"]["name"]}}">
     </div>
     <div class="col-6">
         <label for="contactos" class="form-label">Contactos</label>
         <span id="contactos"></span>
-        <!--        <input type="text" class="form-control" id="contactos" name="contactos" placeholder="1234 Main St">-->
     </div>
     <div class="col-md-12">
         <label for="descricao" class="form-label">Descrição</label>
-        <textarea class="form-control" id="descricao" name="descricao" style="height: 100px" disabled></textarea>
+        <textarea class="form-control" id="descricao" name="descricao" style="height: 100px" disabled>{{data["tarefa"]["descricao"]}}</textarea>
     </div>
 
     <div class="col-md-4">
         <label for="estado" class="form-label">Estado</label>
         <select id="estado" class="form-select" name="estado" disabled>
-            <option value="0" selected>Em espera</option>
-            <option value="1">Em progresso</option>
-            <option value="2">Completo</option>
+            <option value="0" {% if data[
+            "tarefa"]["estado"] == 0 %} selected {% endif %}>Em espera</option>
+            <option value="1" {% if data[
+            "tarefa"]["estado"] == 1 %} selected {% endif %}>Em progresso</option>
+            <option value="2" {% if data[
+            "tarefa"]["estado"] == 2 %} selected {% endif %}>Completo</option>
         </select>
     </div>
 
@@ -52,17 +55,35 @@ Agenda
             Ficheiros
         </label>
         <div class="col-md-12">
-            <div class="fallback dropzone" id="uploader" style="display:none">
+
+            <div class="input-group " id="uploadFileDiv" style="display: none">
+              <input type="file" class="form-control" id="fileUpload" aria-describedby="fileUpload" name="fileUpload" aria-label="Upload" multiple>
+              <a class="btn btn-outline-secondary" onclick="addFile()" >Adicionar</a>
             </div>
 
             <div class="fallback dropzone" id="uploader1">
+                {% for result in data["documentos"] %}
+                    <div class="documentInfo" alt="{{ result["idDocumento"] }}" >
+
+                        <a href="{{ url_for('static', filename=result["localizacao"]) }}" download >
+                           <i class="fa fa-file-text-o fa-4x" aria-hidden="true"></i>
+                            <div title="" class="imageName" >{{result["nome"]}}</div>
+                        </a>
+                        <div class="removeImage" onclick="removeFile({{ result["idDocumento"] }})">
+                            <i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-primary" style="float:right; margin:10px; display:none" id="save">Gravar tarefa</button>
+        <a class="btn btn-primary" style="float:right; margin:10px; display:none" id="save" onclick="sendData()">Gravar
+            tarefa
+        </a>
         <a class="btn btn-primary" style="float:right; margin:10px;" id="edit" onclick="changeForm()">Editar tarefa</a>
+        <a class="btn btn-danger" style="float:right; margin:10px;" id="remove" onclick="remove()">Remover</a>
         <a class="btn btn-secondary" style="float:right; margin:10px;" href="/tarefas">Voltar</a>
     </div>
 </form>
@@ -70,19 +91,222 @@ Agenda
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='javascript/dropzone.min.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/selectPure.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/tarefasRegisto.js') }}"></script>
 
 <script>
-    function  changeForm(){
+    var myHeaders = new Headers();
+    var contactos
+    var documentos
+    var responseX
+    document.addEventListener('DOMContentLoaded', async function () {
+        var contactosList = {{ data["contactos"] | safe }};
+
+
+
+        contactosList.map(i => {
+            i.label = i.name
+            i.value = i.idUser
+        })
+        contactos = new SelectPure("#contactos", {
+            options: contactosList,
+            multiple: true,
+            autocomplete: true,
+            disabled: true,
+            icon: "fa fa-times",
+            classNames: {
+                select: "select-pure__select",
+                dropdownShown: "select-pure__select--opened",
+                multiselect: "select-pure__select--multiple",
+                label: "select-pure__label",
+                placeholder: "select-pure__placeholder",
+                dropdown: "select-pure__options",
+                option: "select-pure__option",
+                autocompleteInput: "select-pure__autocomplete",
+                selectedLabel: "select-pure__selected-label",
+                selectedOption: "select-pure__option--selected",
+                placeholderHidden: "select-pure__placeholder--hidden",
+                optionHidden: "select-pure__option--hidden",
+            }
+        });
+        let contactosTarefa = {{ data["tarefa"]["usersTarefas"]|safe }}
+        let contactosSelected = Array.from(document.querySelectorAll("#contactos > div > div > div")).filter((i) => contactosTarefa.map(String).includes(i.attributes.getNamedItem("data-value").value))
+
+        contactosSelected.map(i => {
+            i.click();
+            i.click();
+        })
+    });
+
+    async function sendData() {
+        myHeaders.append("Authorization", await getCookie("access_token"));
+
+        let formdata = new FormData();
+        formdata.append("name", document.registo.name.value);
+        formdata.append("descricao", document.registo.descricao.value);
+        formdata.append("estado", document.registo.estado.value);
+        try {
+            contactos.value().map((i, k) => formdata.append("usersTarefas" + k, i))
+        } catch (e) {
+
+        }
+
+        var requestOptions = {
+          method: 'PUT',
+          headers: myHeaders,
+          body: formdata,
+          redirect: 'follow'
+        };
+
+        fetch("http://localhost:5000//api/tarefa/"+document.registo.idTarefa.value, requestOptions)
+          .then(response => {
+              if (response.status == 200 || response.status == 201) {
+                document.getElementById("save").style.display = "none";
+                document.getElementById("edit").style.display = "block";
+                document.getElementById("uploader1").style.display = "block";
+                document.getElementById("uploadFileDiv").style.display = "none";
+                document.getElementById("name").disabled = true;
+                document.getElementById("descricao").disabled = true;
+                document.getElementById("estado").disabled = true;
+              }
+
+            })
+          .catch(error => console.log('error', error));
+        if (document.registo.fileUpload.files.length > 0)
+            addFile()
+
+    }
+
+    function changeForm() {
         document.getElementById("save").style.display = "block";
         document.getElementById("edit").style.display = "none";
-        document.getElementById("uploader1").style.display = "none";
-        document.getElementById("uploader").style.display = "block";
-        document.getElementById("nome").disabled=false;
-        document.getElementById("descricao").disabled=false;
-        document.getElementById("estado").disabled=false;
+        document.getElementById("uploader1").style.display = "block";
+        document.getElementById("uploadFileDiv").style.display = "flex";
+        document.getElementById("name").disabled = false;
+        document.getElementById("descricao").disabled = false;
+        document.getElementById("estado").disabled = false;
     }
+
+    async function addFile() {
+        if (document.registo.fileUpload.files.length == 0) {
+            alert("Tem de adicionar ficheiros");
+            return 0;
+        }
+
+        myHeaders.append("Authorization", await getCookie("access_token"));
+        let formdata = new FormData();
+        let i = 0
+        while (i < document.registo.fileUpload.files.length) {
+            formdata.append("documentos" + i, document.registo.fileUpload.files[i], document.registo.fileUpload.files[i].name);
+            i++
+        }
+        let requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formdata,
+          redirect: 'follow'
+        };
+        fetch("http://localhost:5000//api/documento/"+document.registo.idTarefa.value, requestOptions)
+            .then(response => {
+                if (response.status == 200 || reponse.status== 201)
+                    return response.json()
+                else {
+                    alert ("Não foi possivel guardar os ficheiros")
+                    return null;
+                }
+            })
+            .then(result => {
+               if (result == null)
+                   return null
+               else {
+                    let dataDoc = "";
+                    result.map(i => {
+                        let link ="{{ url_for("static", filename="filenameGoesHere") | safe}}"
+                      dataDoc += '<div class="documentInfo" alt="'+i.idDocumento+'" >'+
+                        '<a href="'+link.replace("filenameGoesHere",i.localizacao)+'" download >'+
+                           '<i class="fa fa-file-text-o fa-4x" aria-hidden="true"></i>'+
+                            '<div title="" class="imageName" >'+i.nome+'</div>'+
+                        '</a>'+
+                        '<div class="removeImage" onclick="removeFile('+i.idDocumento+')">'+
+                            '<i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i>'+
+                        '</div>'+
+                    '</div>'
+                    })
+
+                   document.getElementById("uploader1").innerHTML = dataDoc;
+               }
+
+            })
+
+          .then(response => {
+
+            })
+          .catch(error => console.log('error', error));
+    }
+
+    async function removeFile(id) {
+        event.stopPropagation()
+        if (!confirm("Deseja eliminar o ficheiro?"))
+            return 0;
+
+        myHeaders.append("Authorization", await getCookie("access_token"));
+        let requestOptions = {
+          method: 'DELETE',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+        fetch("http://localhost:5000//api/documento/"+id, requestOptions)
+          .then(response => {
+              if (response.status == 200 || response.statusText == 201) {
+                   let element =  document.querySelector("div[class='documentInfo'][alt='"+id+"']")
+                  if (element)
+                      element.remove()
+              } else
+                  alert("Houve um erro ao apagar o ficheiro da tarefa");
+          })
+          .catch(error => console.log('error', error));
+
+    }
+
+    async function remove() {
+
+        if (!confirm("Deseja eliminar a tarefa?"))
+            return 0;
+
+        myHeaders.append("Authorization", await getCookie("access_token"));
+
+        let requestOptions = {
+          method: 'DELETE',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+
+        fetch("http://localhost:5000//api/tarefa/"+document.registo.idTarefa.value, requestOptions)
+          .then(response => {
+              if (response.status == 200 || response.status == 201)
+                  window.location.href = "/tarefas"
+              else
+                  alert("Não foi possivel apagar a tarefa, tente mais tarde")
+          })
+          .catch(error => console.log('error', error));
+    }
+
+    async function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length + 1, c.length - 1);
+            }
+        }
+        return "";
+    }
+
+
 </script>
 {% endblock %}

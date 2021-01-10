@@ -39,25 +39,25 @@ Agenda
                 <form class="row g-3" name="adicionarAgendaForm" id="adicionarAgendaForm">
                     <div class="col-md-12">
                         <label for="titulonew" class="col-form-label">Titulo <sup>*</sup></label>
-                        <input type="text" class="form-control" id="titulonew" name="titulonew">
+                        <input type="text" class="form-control" id="titulonew" name="titulonew" maxlength="100">
                     </div>
                     <div class="col-md-6">
                         <label for="datainicionew">Data início <sup>*</sup></label>
-                        <input type="text" class="form-control" id="datainicionew" name="datainicionew">
+                        <input type="text" class="form-control" id="datainicionew" name="datainicionew" maxlength="16">
                     </div>
                     <div class="col-md-6">
                         <label for="datafimnew">Data fim <sup>*</sup></label>
-                        <input type="text" class="form-control" id="datafimnew" name="datafimnew">
+                        <input type="text" class="form-control" id="datafimnew" name="datafimnew" maxlength="16">
 
                     </div>
                     <div class="col-md-12">
                         <label for="descricaonew" class="col-form-label">Descrição <sup>*</sup></label>
-                        <textarea class="form-control" id="descricaonew" name="descricaonew"
+                        <textarea class="form-control" id="descricaonew" name="descricaonew" maxlength="512"
                                   style="resize: none"></textarea>
                     </div>
                     <div class="col-md-12">
                         <label for="localizacaonew" class="col-form-label">Localização GPS</label>
-                        <input type="text" class="form-control" name="localizacaonew" id="localizacaonew">
+                        <input type="text" class="form-control" name="localizacaonew" id="localizacaonew" maxlength="512">
                     </div>
                     <div class="col-md-6">
                         <label for="contactosnew">Contactos</label>
@@ -98,25 +98,25 @@ Agenda
                     <input type="hidden" class="form-control" id="id" name="id" disabled>
                     <div class="col-md-12">
                         <label for="title" class="col-form-label">Titulo <sup>*</sup></label>
-                        <input type="text" class="form-control" id="title" name="titulo" disabled>
+                        <input type="text" class="form-control" id="title" name="titulo" disabled maxlength="100">
                     </div>
                     <div class="col-md-6">
                         <label for="datainicio">Data início <sup>*</sup></label>
-                        <input type="text" class="form-control" id="datainicio" name="datainicio" disabled>
+                        <input type="text" class="form-control" id="datainicio" name="datainicio" disabled maxlength="16">
                     </div>
                     <div class="col-md-6">
                         <label for="datafim">Data fim <sup>*</sup></label>
-                        <input type="text" class="form-control" id="datafim" name="datafim" disabled>
+                        <input type="text" class="form-control" id="datafim" name="datafim" disabled maxlength="16">
 
                     </div>
                     <div class="col-md-12">
                         <label for="descricao" class="col-form-label">Descrição <sup>*</sup></label>
-                        <textarea class="form-control" name="descricao" id="descricao" style="resize: none"
+                        <textarea class="form-control" name="descricao" id="descricao" style="resize: none" maxlength="512"
                                   disabled></textarea>
                     </div>
                     <div class="col-md-12">
                         <label for="localizacao" class="col-form-label">Localização GPS</label>
-                        <input type="text" class="form-control" id="localizacao" name="localizacao" disabled>
+                        <input type="text" class="form-control" id="localizacao" name="localizacao" disabled maxlength="512">
                     </div>
                     <div class="col-md-6">
                         <label for="contactos">Contactos</label>

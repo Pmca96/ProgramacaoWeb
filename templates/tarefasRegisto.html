@@ -10,28 +10,27 @@ Agenda
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.min.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selectPure.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/css/font-awesome.min.css') }}">
+
 {% endblock %}
 
 
 {% block content %}
 
-<h3>Criar Tarefa</h3>
+<h3>Visualizar Tarefa</h3>
 
 
 <div class="row">
 
 </div>
 
-<form action="/file-upload" class="row g-3">
-
+<form action="/file-upload" class="row g-3" name="registo">
     <div class="col-md-6">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" name="nome" id="nome">
+        <label for="name" class="form-label">Nome</label>
+        <input type="text" class="form-control" name="name" id="name" >
     </div>
     <div class="col-6">
         <label for="contactos" class="form-label">Contactos</label>
         <span id="contactos"></span>
-        <!--        <input type="text" class="form-control" id="contactos" name="contactos" placeholder="1234 Main St">-->
     </div>
     <div class="col-md-12">
         <label for="descricao" class="form-label">Descrição</label>
@@ -41,7 +40,7 @@ Agenda
     <div class="col-md-4">
         <label for="estado" class="form-label">Estado</label>
         <select id="estado" class="form-select" name="estado">
-            <option value="0" selected>Em espera</option>
+            <option value="0">Em espera</option>
             <option value="1">Em progresso</option>
             <option value="2">Completo</option>
         </select>
@@ -52,14 +51,19 @@ Agenda
             Ficheiros
         </label>
         <div class="col-md-12">
-            <div class="fallback dropzone" id="uploader">
-                <input name="file" type="file" multiple id="file" style="display:none;"/>
+
+            <div class="input-group " id="uploadFileDiv" >
+              <input type="file" class="form-control" id="fileUpload" aria-describedby="fileUpload" name="fileUpload" aria-label="Upload" multiple>
             </div>
+
+
         </div>
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-primary" style="float:right; margin:10px;">Gravar tarefa</button>
+        <a class="btn btn-primary" style="float:right; margin:10px;" id="save" onclick="sendData()">Cirar
+            tarefa
+        </a>
         <a class="btn btn-secondary" style="float:right; margin:10px;" href="/tarefas">Voltar</a>
     </div>
 </form>
@@ -67,7 +71,100 @@ Agenda
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='javascript/dropzone.min.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/selectPure.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/tarefasRegisto.js') }}"></script>
+
+<script>
+    var myHeaders = new Headers();
+    var contactos
+    document.addEventListener('DOMContentLoaded', async function () {
+        var contactosList = {{ data["contactos"] | safe }};
+
+        contactosList.map(i => {
+            i.label = i.name
+            i.value = i.idUser
+        })
+        contactos = new SelectPure("#contactos", {
+            options: contactosList,
+            multiple: true,
+            autocomplete: true,
+            disabled: true,
+            icon: "fa fa-times",
+            classNames: {
+                select: "select-pure__select",
+                dropdownShown: "select-pure__select--opened",
+                multiselect: "select-pure__select--multiple",
+                label: "select-pure__label",
+                placeholder: "select-pure__placeholder",
+                dropdown: "select-pure__options",
+                option: "select-pure__option",
+                autocompleteInput: "select-pure__autocomplete",
+                selectedLabel: "select-pure__selected-label",
+                selectedOption: "select-pure__option--selected",
+                placeholderHidden: "select-pure__placeholder--hidden",
+                optionHidden: "select-pure__option--hidden",
+            }
+        });
+    });
+
+    async function sendData() {
+        myHeaders.append("Authorization", await getCookie("access_token"));
+
+        let formdata = new FormData();
+        formdata.append("name", document.registo.name.value);
+        formdata.append("descricao", document.registo.descricao.value);
+        formdata.append("estado", document.registo.estado.value);
+        try {
+            contactos.value().map((i, k) => formdata.append("usersTarefas" + k, i))
+        } catch (e) {
+
+        }
+        let i = 0
+        while (i < document.registo.fileUpload.files.length) {
+            formdata.append("documentos" + i, document.registo.fileUpload.files[i], document.registo.fileUpload.files[i].name);
+            i++
+        }
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formdata,
+          redirect: 'follow'
+        };
+
+        fetch("http://localhost:5000//api/tarefa", requestOptions)
+          .then(response => {
+              if (response.status == 200 || response.status == 201) {
+                return response.json()
+              }else {
+                  alert("Não foi possivel guardar a tarefa, tente mais tarde");
+                  return null
+              }
+
+            }).then(result => {
+                if (result != null)
+                    window.location.href = "/tarefas/"+result['idTarefa']
+            })
+          .catch(error => console.log('error', error));
+    }
+
+
+    async function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length + 1, c.length - 1);
+            }
+        }
+        return "";
+    }
+
+
+</script>
 {% endblock %}

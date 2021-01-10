@@ -8,6 +8,7 @@ from flask_jwt_extended import jwt_required, get_jwt_claims
 from models.documentos import Documento
 from models.tarefas import Tarefa
 from schemas.tarefas import TarefaSchema
+from models.users import User
 
 Tarefa_schema = TarefaSchema()
 Tarefa_list_schema = TarefaSchema(many=True)
@@ -37,6 +38,12 @@ class TarefaId(Resource):
                 tarefa.descricao = request.form["descricao"]
             if 'estado' in request.form:
                 tarefa.estado = request.form["estado"]
+            i=0
+            tarefa.usersTarefas.clear()
+            if 'usersTarefas' + str(i) in request.form:
+                while 'usersTarefas' + str(i) in request.form:
+                    tarefa.usersTarefas.append(User.find_by_id(request.form["usersTarefas" + str(i)]))
+                    i += 1
 
             tarefa.save_to_db()
             return {"msg": "Tarefa alterada com sucesso"}, 200
@@ -72,7 +79,10 @@ class TarefaGeral(Resource):
     def get(cls):
         claims = get_jwt_claims()
         tarefas = Tarefa.find_all(claims['id'])
-        return Tarefa_list_schema.dump(tarefas), 200
+        if (tarefas):
+            return Tarefa_list_schema.dump(tarefas), 200
+        else:
+            return {'msg':'Sem tarefas'}, 401
 
     @classmethod
     @jwt_required
@@ -89,9 +99,16 @@ class TarefaGeral(Resource):
             tarefa.estado = request.form["estado"]
         else:
             tarefa.estado = 0
+
+        i = 0
+        if 'usersTarefas'+ str(i) in request.form:
+            while 'usersTarefas' + str(i) in request.form:
+                tarefa.usersTarefas.append(User.find_by_id(request.form["usersTarefas"+str(i)]))
+                i+=1
         tarefa.save_to_db()
 
         i = 0
+
         while 'documentos' + str(i) in request.files:
             file = request.files['documentos' + str(i)]
             filenameSplitted = file.filename.split(".")
@@ -100,7 +117,8 @@ class TarefaGeral(Resource):
             Doc = Documento()
             Doc.idTarefa = tarefa.idTarefa
             Doc.localizacao = "documents/" + filename
+            Doc.nome = file.filename[0:50]
             Doc.save_to_db()
             i += 1
 
-        return {"msg": "Tarefa criada com sucesso"}, 200
+        return Tarefa_schema.dump(tarefa), 200

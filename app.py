@@ -12,7 +12,7 @@ from models.calendario import Calendario
 from models.users import User, Contactos
 from models.tarefas import usersTarefas, Tarefa
 from resources.contactos import ContactosId
-from resources.documentos import DocumentoId
+from resources.documentos import DocumentoId, DocumentoAgendamentoId
 from resources.tarefas import TarefaGeral, TarefaId
 
 from routes.main import main
@@ -65,6 +65,7 @@ api.add_resource(TarefaGeral, "/api/tarefa")
 api.add_resource(TarefaId, "/api/tarefa/<int:id>")
 
 api.add_resource(DocumentoId, "/api/documento/<int:id>")
+api.add_resource(DocumentoAgendamentoId, "/api/documentoAgenda/<int:id>")
 
 app.register_blueprint(main)
 

@@ -22,7 +22,7 @@ Agenda
 
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".contactosSearch"
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".contactosSearch" onclick="searchContactos()"
         style="float:right; margin:10px;">Adicionar contactos
 </button>
 
@@ -38,7 +38,7 @@ Agenda
             </div>
             <div class="modal-body">
                 <div class="col-md-12">
-                    <input type="text" class="form-control" onkeyup="searchContactos" id="searchContactos" placeholder="Procure por email">
+                    <input type="text" class="form-control" onkeyup="searchContactos()" id="searchContactos" placeholder="Procure por email">
                 </div>
                 <hr>
                 <div id="pesquisaDeContactos">

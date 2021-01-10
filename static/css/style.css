@@ -101,7 +101,7 @@ a, a:hover {
 }
 
 .tarefaLine {
-    padding: 10px;
+    padding: 2px 7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -109,7 +109,7 @@ a, a:hover {
 }
 
 .tarefaLine:hover {
-    border-radius: 20px;
+    border-radius: 5px;
     cursor: pointer;
     background-color: #dce7f4;
     border: 1px solid #3b679d;
@@ -120,11 +120,35 @@ a, a:hover {
 }
 
 #uploader, #uploader1 {
-    border-radius: 20px ;
-    border:2px dotted #3b679d;
+    border-radius: 20px;
+    border: 2px dotted #3b679d;
     background-color: #dce7f4;
-    margin-top:20px;
+    margin-top: 20px;
     width: 100%;
     min-height: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+}
 
+.documentInfo {
+    padding: 10px;
+    width: 139px;
+    float: left;
+    text-align: center;
+}
+
+.imageName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 92px;
+    float:left;
+}
+
+.removeImage {
+    position: relative;
+    margin-top: -8px;
+    color: red;
+    cursor: pointer;
+    float:right;
 }

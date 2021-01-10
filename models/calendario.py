@@ -30,6 +30,7 @@ calendarioTarefas = db.Table('calendarioTarefas',
 class Calendario(db.Model):
     __Tablename__ = 'calendario'
     idCalendario = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
     start = db.Column(db.String(20))
     end = db.Column(db.String(20))
     gps = db.Column(db.String(512))
@@ -41,6 +42,7 @@ class Calendario(db.Model):
     tarefas = db.relationship("Tarefa", secondary=calendarioTarefas)
 
     def __init__(self):
+        self.title = ""
         self.start = ""
         self.end = ""
         self.gps = ""
